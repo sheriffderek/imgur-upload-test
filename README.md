@@ -8,16 +8,18 @@ The project this is for primarily - is a Shopify store. It uses jQuery / so, I w
 
 ## Plan
 
+use imgur because it _might_ be free and fast / and we're talking < 10 a month...
+
+imgur API docs: https://apidocs.imgur.com/?version=latest#c85c9dfc-7487-4de2-9ecd-66f727cf3139
+
 1. User adds image... which is - then base64 encoded so that we can see it on screen
 ... but - we shouldn't upload it to imgur yet, right? - because... - what if they change their mind? - It seems like we should do that after they leave that section / or on final confirmation
 
 2. when ready to confirm / upload it to imgur - so that we have URL to get the image from in the product line items. (but for now / any confirmation that this works is fine)
 
-imgur API docs: https://apidocs.imgur.com/?version=latest#c85c9dfc-7487-4de2-9ecd-66f727cf3139
+3. the goal is that we get a URL for where the image lives...
 
-3. - the goal is that we get a URL for where the image lives...
-
-4. - Totally open to some other storage service... the key things just have to be:
+### Totally open to some other storage service... the key things just have to be:
 * * upload image to a server
 * * get a link to that image
 * * client can easily get the image
