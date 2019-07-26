@@ -1,0 +1,174 @@
+
+
+<style>
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  figure {
+    margin: 0;
+    padding: 0;
+    max-width: 400px;
+    margin: 20px 0;
+  }
+</style>
+
+<main id='app'>
+
+  
+  <h1>{{name}}</h1>
+  
+  <p>User adds image... which is - then base64 encoded so that we can see it on screen</p>
+  
+  <p>the goal is that we get a URL for where the image lives</p><br>
+  
+  <form @submit.prevent='' class="form">
+
+    <button @click='setImageType("file")'>upload a file from your computer</button>
+    <button @click='setImageType("url")'>use an image from the internet</button>
+
+    <div class="primary-thing" v-if='imageType == "file"'>
+      <input type="file"
+        id='file-upload'
+        :value='customImage'
+        @change='previewImage'
+        accept="image/*"
+      />
+      <button @click='submitImage'> Submit </button>
+    </div>
+
+    <div class="alternate-thing" v-if='imageType == "url"'>
+      <p>or enter the URL of your image</p>
+
+      <input v-model='explicitImageUrl'><br>
+    </div>
+
+    <figure class="image preview">
+      <img :src='imageToPreview' v-if='imageToPreview' />
+      <img v-else src='https://placehold.it/1600x900' alt='' />
+    </figure>
+
+  </form>
+
+  <output>
+    imageLink: {{imageLink}}<br><br>
+    customImage: {{customImage}}<br><br>
+    imageData: {{imageData}}<br><br>
+    explicitImageUrl: {{explicitImageUrl}}<br><br>
+    imageToPreview: {{imageToPreview}}<br><br>
+  </output>
+  
+</main>
+
+
+
+
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js'></script>
+
+<script>
+console.clear();
+Vue.config.productionTip = false;
+
+// https://bit.ly/2Y11UHw  - alternate link example...
+/*
+
+PLAN:
+
+1. User adds image... which is - then base64 encoded so that we can see it on screen
+... but - we shouldn't upload it to imgur yet, right? - because... - what if they change their mind? - It seems like we should do that after they leave that section / or on final confirmation
+2. when ready to confirm / upload it to imgur - so that we have URL to get the image from in the product line items.
+
+imgur API docs: https://apidocs.imgur.com/?version=latest#c85c9dfc-7487-4de2-9ecd-66f727cf3139
+
+3. - the goal is that we get a URL for where the image lives... 
+
+*/
+
+var exampleImageUrl = 'https://bit.ly/2K5X3ea'; // .png (shortened url)
+
+
+// https://cors-anywhere.herokuapp.com/xxx
+async function uploadImageToImgur(imageData, image) {
+  // const UPLOAD_URL = "https://api.imgur.com/3/image";
+  const UPLOAD_URL = "https://cors-anywhere.herokuapp.com/https://api.imgur.com/3/image";
+  const CLIENT_ID = "3049d99fd684c47";
+  const AUTH_KEY = `Client-ID ${CLIENT_ID}`;
+  const formData = new FormData();
+  formData.append('image', imageData);
+  
+  const settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": UPLOAD_URL,
+    "method": "POST",
+    "headers": {
+      "Authorization": AUTH_KEY,
+      "cache-control": "no-cache",
+    },
+    "processData": false,
+    "contentType": false,
+    "mimeType": "multipart/form-data",
+    "data": formData
+  }
+
+  const result = await $.ajax(settings);
+  return JSON.parse(result);
+};
+
+
+
+const thisApp = new Vue({
+  el: "#app",
+
+  data: {
+    name: "Image upload with Imgur",
+    imageType: "file",
+    customImage: null, // file?
+    explicitImageUrl: exampleImageUrl, // https://placehold.it/1200  // or something
+    imageData: null, // the base64 encoded version to show
+    uploadedImageUrl: '',
+    imageLink: ''
+  },
+
+  computed: {
+    imageToPreview() {
+      if (this.imageType == "file") {
+        return this.imageData;
+      } else {
+        return this.explicitImageUrl;
+      }
+    },
+  },
+
+  methods: {
+    setImageType(type) {
+      this.imageType = type;
+    },
+    async submitImage(event) {
+      event.preventDefault();
+      const response = await uploadImageToImgur(this.imageData);
+      this.imageLink = response.data.link;
+    },
+    previewImage() {
+      const preview = document.querySelector('img');
+      const file    = document.querySelector('input[type=file]').files[0];
+      const reader  = new FileReader();
+
+      reader.addEventListener("load", function () {
+        preview.src = reader.result;
+      }, false);
+
+      if (file) {
+        this.imageData = file;
+        reader.readAsDataURL(file);
+      }
+    }
+  },
+
+});
+
+</script>
