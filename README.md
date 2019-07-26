@@ -17,6 +17,12 @@ imgur API docs: https://apidocs.imgur.com/?version=latest#c85c9dfc-7487-4de2-9ec
 
 3. - the goal is that we get a URL for where the image lives...
 
+4. - Totally open to some other storage service... the key things just have to be:
+* * upload image to a server
+* * get a link to that image
+* * client can easily get the image
+* * doesn't even need to be stored indefinitly... 
+
 ## Issues
 
 * CORS
