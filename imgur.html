@@ -73,18 +73,10 @@
 console.clear();
 Vue.config.productionTip = false;
 
-// https://bit.ly/2Y11UHw  - alternate link example...
+// https://bit.ly/2Y11UHw  - alternate link example to paste in...
 /*
 
-PLAN:
-
-1. User adds image... which is - then base64 encoded so that we can see it on screen
-... but - we shouldn't upload it to imgur yet, right? - because... - what if they change their mind? - It seems like we should do that after they leave that section / or on final confirmation
-2. when ready to confirm / upload it to imgur - so that we have URL to get the image from in the product line items.
-
-imgur API docs: https://apidocs.imgur.com/?version=latest#c85c9dfc-7487-4de2-9ecd-66f727cf3139
-
-3. - the goal is that we get a URL for where the image lives... 
+PLAN: see README
 
 */
 
@@ -99,7 +91,7 @@ async function uploadImageToImgur(imageData, image) {
   const AUTH_KEY = `Client-ID ${CLIENT_ID}`;
   const formData = new FormData();
   formData.append('image', imageData);
-  
+
   const settings = {
     "async": true,
     "crossDomain": true,

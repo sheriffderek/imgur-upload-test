@@ -22,3 +22,5 @@ imgur API docs: https://apidocs.imgur.com/?version=latest#c85c9dfc-7487-4de2-9ec
 * CORS
 
 * the response when you DO get the response / doesn't return any URL data - which is the whole point...  / so, if that doesn't work - then we'll need to use some other service.
+
+* there is no transpiler / so - while we're only supporting EDGE and up... / we can't use async await etc. - if the browser can't read it / so , promises - or whatever needs to happen to ensure that things are OK for _no_ build tools.
